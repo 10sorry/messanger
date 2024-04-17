@@ -1,4 +1,5 @@
 #include "Servermanager.h"
+#include "qtcpsocket.h"
 
 ServerManager::ServerManager(ushort port, QObject *parent)
     : QObject{parent}

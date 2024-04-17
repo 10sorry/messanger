@@ -27,6 +27,8 @@ void MainWindow::newClientConnected(QTcpSocket *client)
 
 void MainWindow::clientDisconnected(QTcpSocket *client)
 {
+    auto id = client->property("id").toInt();
+    ui->listClients->addItem(QString("Client disconnected: %1").arg(id));
 
 }
 

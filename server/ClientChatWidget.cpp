@@ -8,6 +8,7 @@ ClientChatWidget::ClientChatWidget(QTcpSocket *client, QWidget *parent)
 {
     ui->setupUi(this);
     connect(_client, &QTcpSocket::readyRead, this, &ClientChatWidget::dataReceived);
+    connect(_client, &QTcpSocket::disconnected, this, &ClientChatWidget::clientDisconnected);
 }
 
 ClientChatWidget::~ClientChatWidget()
@@ -24,5 +25,9 @@ void ClientChatWidget::on_buttonSend_clicked()
 {
     _client->write(ui->lineMessage->text().trimmed().toUtf8());
     ui->lineMessage->setText("");
+}
+void ClientChatWidget::clientDisconnected()
+{
+    ui->widgetSend->setEnabled(false);
 }
 

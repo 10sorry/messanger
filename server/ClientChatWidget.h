@@ -17,6 +17,8 @@ public:
     ~ClientChatWidget();
 private slots:
     void dataReceived();
+    void on_buttonSend_clicked();
+    void clientDisconnected();
 
 private:
     Ui::ClientChatWidget *ui;
