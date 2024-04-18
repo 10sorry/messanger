@@ -14,7 +14,7 @@ class ChatWidget : public QWidget
 public:
     explicit ChatWidget(QWidget *parent = nullptr);
     ~ChatWidget();
-    void setMessage(QString message, bool isMyMessage);
+    void setMessage(QString message, bool isMyMessage = false);
     //void setMessage(QString message);
 
 private:

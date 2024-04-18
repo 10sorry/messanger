@@ -17,18 +17,17 @@ public:
     QString name() const;
 public:
     void sendIsTyping();
-    void setClient();
 signals:
     void connected();
     void disconnected();
     //void dataReceived(QByteArray data); //более не требуется
-    void textMessagereceived(QString message);
+    void textMessageReceived(QString message);
     void isTyping();
     void nameSet(QString name);
 
 private slots:
     void readyRead();
-private:
+private: //fields
     QTcpSocket *_socket;
     QHostAddress _ip;
     ushort _port;

@@ -24,16 +24,15 @@ void ChatProto::loadData(QByteArray data)
     QDataStream in(&data, QIODevice::ReadOnly);
     in.setVersion(QDataStream::Qt_6_0);
     in >> _messType;
-    switch(_messType)
-    {
-        case Text:
-            in >> _message;
-            break;
-            in >> _name;
-        case Name:
-            break;
-        default:
-            break;
+    switch(_messType) {
+    case Text:
+        in >> _message;
+        break;
+    case Name:
+        in >> _name;
+        break;
+    default:
+        break;
     }
 }
 

@@ -37,17 +37,16 @@ void ClientManager::readyRead()
     auto data = _socket->readAll(); //в дальнейшем пробрасываем в протобаф
     //emit dataReceived(data);
     _proto.loadData(data);
-    switch(_proto.messType())
-    {
-        case ChatProto::Text:
-            emit textMessageReceived(_proto.message());
-            break;
-        case ChatProto::Name:
-            emit nameSet(_proto.name());
-        case ChatProto::IsTyping:
-            emit isTyping();
-            break;
-        default:
-            break;
+    switch(_proto.messType()) {
+    case ChatProto::Text:
+        emit textMessageReceived(_proto.message());
+        break;
+    case ChatProto::IsTyping:
+        emit isTyping();
+    case ChatProto::Name:
+        emit nameSet(_proto.name());
+        break;
+    default:
+        break;
     }
 }

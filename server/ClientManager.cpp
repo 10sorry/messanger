@@ -6,17 +6,19 @@ ClientManager::ClientManager(QHostAddress ip, ushort port, QObject *parent)
     _port(port)
 {
     _socket = new QTcpSocket(this);
-    setClient();
+    connect(_socket, &QTcpSocket::connected, this, &ClientManager::connected);
+    connect(_socket, &QTcpSocket::disconnected, this, &ClientManager::disconnected);
+    connect(_socket, &QTcpSocket::readyRead, this, &ClientManager::readyRead);
 }
 
 ClientManager::ClientManager(QTcpSocket *client, QObject *parent)
     : QObject{parent},
     _socket(client)
 {
-    setClient();
+    connect(_socket, &QTcpSocket::connected, this, &ClientManager::connected);
+    connect(_socket, &QTcpSocket::disconnected, this, &ClientManager::disconnected);
+    connect(_socket, &QTcpSocket::readyRead, this, &ClientManager::readyRead);
 }
-
-
 void ClientManager::connectToServer()
 {
     _socket->connectToHost(_ip, _port);
@@ -50,25 +52,17 @@ void ClientManager::readyRead()
     auto data = _socket->readAll(); //в дальнейшем пробрасываем в протобаф
     //emit dataReceived(data);
     _proto.loadData(data);
-    switch(_proto.messType())
-    {
-        case ChatProto::Text:
-            emit textMessagereceived(_proto.message());
-            break;
-        case ChatProto::Name:
-            emit nameSet(_proto.name());
-        case ChatProto::IsTyping:
-            emit isTyping();
-            break;
-        default:
-            break;
-
+    switch(_proto.messType()) {
+    case ChatProto::Text:
+        emit textMessageReceived(_proto.message());
+        break;
+    case ChatProto::IsTyping:
+        emit isTyping();
+    case ChatProto::Name:
+        emit nameSet(_proto.name());
+        break;
+    default:
+        break;
     }
 }
 
-void ClientManager::setClient()
-{
-    connect(_socket, &QTcpSocket::connected, this, &ClientManager::connected);
-    connect(_socket, &QTcpSocket::disconnected, this, &ClientManager::disconnected);
-    connect(_socket, &QTcpSocket::readyRead, this, &ClientManager::readyRead);
-}

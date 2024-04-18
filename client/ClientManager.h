@@ -25,7 +25,7 @@ signals:
 
 private slots:
     void readyRead();
-private:
+private: //fields
     QTcpSocket *_socket;
     QHostAddress _ip;
     ushort _port;

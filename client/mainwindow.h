@@ -21,12 +21,10 @@ public:
 private slots:
     void on_actionConnect_triggered();
     void dataReceived(QString message);
-
     void on_buttonSend_clicked();
-
     void on_lineMessage_editingFinished();
     void onTyping();
-
+    void on_lineNickName_editingFinished();
 
 private:
     Ui::MainWindow *ui;

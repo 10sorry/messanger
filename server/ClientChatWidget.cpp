@@ -7,9 +7,9 @@ ClientChatWidget::ClientChatWidget(QTcpSocket *client, QWidget *parent)
 {
     ui->setupUi(this);
     _client = new ClientManager(client, this);
-    //connect(_client, &QTcpSocket::readyRead, this, &ClientChatWidget::dataReceived); //пока не нужно, но оставим
+   //connect(_client, &QTcpSocket::readyRead, this, &ClientChatWidget::dataReceived); //пока не нужно, но оставим
     connect(_client, &ClientManager::disconnected, this, &ClientChatWidget::clientDisconnected);
-    connect(_client, &ClientManager::textMessagereceived, this, &ClientChatWidget::textMessageReceived);
+    connect(_client, &ClientManager::textMessageReceived, this, &ClientChatWidget::textMessageReceived);
     connect(_client, &ClientManager::isTyping, this, &ClientChatWidget::onTyping);
     connect(_client, &ClientManager::nameSet, this, &ClientChatWidget::clientNameChanged);
     connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
@@ -19,11 +19,6 @@ ClientChatWidget::~ClientChatWidget()
 {
     delete ui;
 }
-/*void ClientChatWidget::dataReceived()
-{
-    auto data = _client->readAll();
-    ui->listMessages->addItem(data);
-}*/
 
 void ClientChatWidget::clientDisconnected()
 {

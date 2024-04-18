@@ -18,14 +18,14 @@ public:
     QByteArray textMessage(QString message);
     QByteArray isTypingMessage();
     QByteArray setNameMessage(QString name);
+
     void loadData(QByteArray data);
+
     const QString &message() const;
-
     const QString &name() const;
-
     MessageType messType() const;
 
-private:
+private: //fields
     QByteArray getData(MessageType messType, QString data);
     MessageType _messType;
     QString _message;

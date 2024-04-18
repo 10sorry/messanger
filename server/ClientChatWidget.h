@@ -17,13 +17,12 @@ public:
     explicit ClientChatWidget(QTcpSocket *client, QWidget *parent = nullptr);
     ~ClientChatWidget();
 private slots:
-    //void dataReceived();
     void on_buttonSend_clicked();
     void clientDisconnected();
     void textMessageReceived(QString message);
     void onTyping();
 signals:
-    void clientNameChanged(QString nickName);
+    void clientNameChanged(QString name);
     void isTyping(QString message);
 
 private:
