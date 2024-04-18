@@ -26,7 +26,7 @@ void MainWindow::on_actionConnect_triggered()
             {
                 ui->centralwidget->setEnabled(false);
             });
-    connect(_client, &ClientManager::textMessagereceived, this, &MainWindow::dataReceived);
+    connect(_client, &ClientManager::textMessageReceived, this, &MainWindow::dataReceived);
     //connect(_client, &ClientManager::nameSet, this, &MainWindow::setWindowTitle);
     connect(_client, &ClientManager::isTyping, this, &MainWindow::onTyping);
 

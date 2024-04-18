@@ -33,6 +33,13 @@ void ClientManager::sendName(QString name)
     _socket->write(_proto.setNameMessage(name));
 }
 
+QString ClientManager::name() const
+{
+    auto id = _socket->property("id").toInt();
+    auto name = _proto.name().length() > 0 ? _proto.name() : QString("Client (%1)").arg(id);
+    return name;
+}
+
 void ClientManager::sendIsTyping()
 {
     _socket->write(_proto.isTypingMessage());

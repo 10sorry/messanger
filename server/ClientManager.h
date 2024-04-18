@@ -14,6 +14,7 @@ public:
     void connectToServer();
     void sendMessage(QString message);
     void sendName(QString name);
+    QString name() const;
 public:
     void sendIsTyping();
     void setClient();

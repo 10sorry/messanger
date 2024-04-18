@@ -40,7 +40,7 @@ void ClientManager::readyRead()
     switch(_proto.messType())
     {
         case ChatProto::Text:
-            emit textMessagereceived(_proto.message());
+            emit textMessageReceived(_proto.message());
             break;
         case ChatProto::Name:
             emit nameSet(_proto.name());
@@ -49,6 +49,5 @@ void ClientManager::readyRead()
             break;
         default:
             break;
-
     }
 }

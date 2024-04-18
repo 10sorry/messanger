@@ -40,11 +40,11 @@ void ClientChatWidget::on_buttonSend_clicked()
 
 void ClientChatWidget::textMessageReceived(QString message)
 {
-
+    ui->listMessages->addItem(message);
 }
 
 void ClientChatWidget::onTyping()
 {
-
+    emit isTyping(QString("%1 is typing...").arg(_client->name()));
 }
 

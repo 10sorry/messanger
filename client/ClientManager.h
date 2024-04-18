@@ -19,7 +19,7 @@ signals:
     void connected();
     void disconnected();
     //void dataReceived(QByteArray data); //более не требуется
-    void textMessagereceived(QString message);
+    void textMessageReceived(QString message);
     void isTyping();
     void nameSet(QString name);
 
