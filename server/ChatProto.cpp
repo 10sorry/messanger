@@ -7,9 +7,13 @@ ChatProto::ChatProto()
 
 }
 
-QByteArray ChatProto::textMessage(QString message)
+QByteArray ChatProto::textMessage(QString message, QString receiver)
 {
-    return getData(Text, message);
+    QByteArray ba;
+    QDataStream out(&ba, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_0);
+    out << Text << receiver << message;
+    return ba;
 }
 QByteArray ChatProto::isTypingMessage()
 {
@@ -17,7 +21,7 @@ QByteArray ChatProto::isTypingMessage()
 }
 QByteArray ChatProto::setNameMessage(QString name)
 {
-    return getData(Name, name);
+    return getData(SetName, name);
 }
 
 QByteArray ChatProto::setInitSendingFileMessage(QString fileName)
@@ -43,6 +47,34 @@ QByteArray ChatProto::setFileMessage(QString fileName)
         file.close();
     }
     return ba;
+}
+
+QByteArray ChatProto::setClientNameMessage(QString previousName, QString name)
+{
+    QByteArray ba;
+    QDataStream out(&ba, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_0);
+    out << ClientName << previousName << name;
+    return ba;
+}
+
+QByteArray ChatProto::setConnectionMessage(QString clientName, QStringList otherClients)
+{
+    QByteArray ba;
+    QDataStream out(&ba, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_0);
+    out << Connection << clientName << otherClients;
+    return ba;
+}
+
+QByteArray ChatProto::setNewClientMessage(QString clientName)
+{
+    return getData(NewClient, clientName);
+}
+
+QByteArray ChatProto::setClientDisconnectedMessage(QString clientName)
+{
+    return getData(ClientDisconnected, clientName);
 }
 
 QByteArray ChatProto::fileData() const
@@ -77,7 +109,7 @@ void ChatProto::loadData(QByteArray data)
     in >> _messType;
     switch(_messType) {
     case Text:
-        in >> _message;
+        in >> _receiver >> _message;
         break;
     case InitSendingFile:
         in >> _fileName >> _fileSize;
@@ -85,7 +117,7 @@ void ChatProto::loadData(QByteArray data)
     case SendFile:
         in >> _fileName >> _fileSize >> _fileData;
         break;
-    case Name:
+    case SetName:
         in >> _name;
         break;
     default:
@@ -100,6 +132,11 @@ QByteArray ChatProto::getData(MessageType messType, QString data)
     out.setVersion(QDataStream::Qt_6_0);
     out << messType << data;
     return ba;
+}
+
+QString ChatProto::receiver() const
+{
+    return _receiver;
 }
 
 ChatProto::MessageType ChatProto::messType() const

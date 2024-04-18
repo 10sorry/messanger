@@ -26,9 +26,14 @@ void ClientManager::connectToServer()
     qDebug() << "Connecting to server: " << _ip.toString() << ":" << _port;
 }
 
+void ClientManager::disconnectFromHost()
+{
+    _socket->disconnectFromHost();
+}
+
 void ClientManager::sendMessage(QString message)
 {
-    _socket->write(_proto.textMessage(message));
+    _socket->write(_proto.textMessage(message, name()));
 }
 
 void ClientManager::sendName(QString name)
@@ -73,8 +78,14 @@ void ClientManager::readyRead()
     _proto.loadData(data);
     switch(_proto.messType()) {
     case ChatProto::Text:
-        emit textMessageReceived(_proto.message());
+        emit textMessageReceived(_proto.message(), _proto.receiver());
         break;
+    case ChatProto::SetName:{
+        auto previousName = _socket->property("clientName").toString();
+        _socket->setProperty("clientName", name());
+        emit nameChanged(previousName, name());
+        break;
+    }
     case ChatProto::IsTyping:
         emit isTyping();
     case ChatProto::InitSendingFile:
@@ -82,12 +93,12 @@ void ClientManager::readyRead()
         break;
     case ChatProto::AcceptSendingFile:
         sendFile();
+        break;
     case ChatProto::RejectSendingFile:
         emit rejectReceivingFile();
+        break;
     case ChatProto::SendFile:
         saveFile();
-    case ChatProto::Name:
-        emit nameSet(_proto.name());
         break;
     default:
         break;

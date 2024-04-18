@@ -11,7 +11,7 @@ class ClientManager : public QObject
 public:
     explicit ClientManager(QHostAddress ip = QHostAddress::LocalHost, ushort port = 4500, QObject *parent = nullptr);
     void connectToServer();
-    void sendMessage(QString message);
+    void sendMessage(QString message, QString receiver);
     void sendName(QString name);
     void setInitFile(QString fileName);
     void sendIsTyping();
@@ -29,6 +29,11 @@ signals:
     void nameSet(QString name);
     void rejectReceivingFile();
     void initReceivingFile(QString clietnName, QString fileName, qint64 fileSize);
+
+    void connection(QString myName, QStringList clientsName);
+    void newClientConnectedToServer(QString clienName);
+    void clientNameChanged(QString previousName, QString clientName);
+    void clientDisconnected(QString clientName);
 
 private slots:
     void readyRead();

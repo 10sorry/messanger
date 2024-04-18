@@ -9,8 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setupClient();
     ui->centralwidget->setEnabled(false);
-    QString iconName = "://C:/Users/foxhalf/Downloads/attachment.png"; // Укажи путь к иконке
+    QString iconName = "://C:/Users/foxhalf/Downloads/attachment.png";
     QIcon icon(iconName);
     ui->attachButton->setIcon(icon);
 }
@@ -20,22 +21,31 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionConnect_triggered()
+void MainWindow::setupClient()
 {
     _client = new ClientManager();
     connect(_client, &ClientManager::connected, [this]()
-    {
-        ui->centralwidget->setEnabled(true);
-    });
+            {
+                ui->centralwidget->setEnabled(true);
+            });
     connect(_client, &ClientManager::disconnected, [this]()
             {
                 ui->centralwidget->setEnabled(false);
             });
     connect(_client, &ClientManager::textMessageReceived, this, &MainWindow::dataReceived);
     connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
-    //connect(_client, &ClientManager::nameSet, this, &MainWindow::setWindowTitle);
     connect(_client, &ClientManager::rejectReceivingFile, this, &MainWindow::onRejectReceivingFile);
     connect(_client, &ClientManager::initReceivingFile, this, &MainWindow::onInitReceivingFile);
+
+    connect(_client, &ClientManager::connection, this, &MainWindow::onConnection);
+    connect(_client, &ClientManager::newClientConnectedToServer, this, &MainWindow::onNewClientConnectedToServer);
+    connect(_client, &ClientManager::clientDisconnected, this, &MainWindow::onClientDisconnected);
+    connect(_client, &ClientManager::clientNameChanged, this, &MainWindow::onClientNameChanged);
+}
+
+void MainWindow::on_actionConnect_triggered()
+{
+    setupClient();
 
     _client->connectToServer();
 }
@@ -43,7 +53,7 @@ void MainWindow::on_actionConnect_triggered()
 void MainWindow::on_buttonSend_clicked()
 {
     auto message = ui->lineMessage->text().trimmed();
-    _client->sendMessage(message);
+    _client->sendMessage(message, ui->comboBoxReceiver->currentText());
     //ui->listMessages->addItem(message);
     ui->lineMessage->setText("");
     ui->lineMessage->setFocus();
@@ -116,5 +126,45 @@ void MainWindow::on_attachButton_clicked()
     */
     auto fileName = QFileDialog::getOpenFileName(this, "Select a file", "/home");
     _client->sendInitSendingFile(fileName);
+}
+
+void MainWindow::onConnection(QString myName, QStringList clientsName)
+{
+    ui->comboBoxReceiver->clear();
+    clientsName.prepend("All");
+    clientsName.prepend("Server");
+    foreach (auto client, clientsName) {
+        ui->comboBoxReceiver->addItem(client);
+    }
+    setWindowTitle(myName);
+}
+
+void MainWindow::onNewClientConnectedToServer(QString clientName)
+{
+    ui->comboBoxReceiver->addItem(clientName);
+}
+
+void MainWindow::onClientNameChanged(QString previousName, QString clientName)
+{
+    for (int i = 0; i < ui->comboBoxReceiver->count(); ++i)
+    {
+        if (ui->comboBoxReceiver->itemText(i) == previousName)
+        {
+            ui->comboBoxReceiver->setItemText(i, clientName);
+            return;
+        }
+    }
+}
+
+void MainWindow::onClientDisconnected(QString clientName)
+{
+    for (int i = 0; i < ui->comboBoxReceiver->count(); ++i)
+    {
+        if (ui->comboBoxReceiver->itemText(i) == clientName)
+        {
+            ui->comboBoxReceiver->removeItem(i);
+            return;
+        }
+    }
 }
 

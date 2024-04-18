@@ -7,9 +7,13 @@ ChatProto::ChatProto()
 
 }
 
-QByteArray ChatProto::textMessage(QString message)
+QByteArray ChatProto::textMessage(QString message, QString receiver)
 {
-    return getData(Text, message);
+    QByteArray ba;
+    QDataStream out(&ba, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_0);
+    out << Text << receiver << message;
+    return ba;
 }
 QByteArray ChatProto::isTypingMessage()
 {
@@ -17,7 +21,7 @@ QByteArray ChatProto::isTypingMessage()
 }
 QByteArray ChatProto::setNameMessage(QString name)
 {
-    return getData(Name, name);
+    return getData(SetName, name);
 }
 
 QByteArray ChatProto::setInitSendingFileMessage(QString fileName)
@@ -62,7 +66,7 @@ void ChatProto::loadData(QByteArray data)
     in >> _messType;
     switch(_messType) {
     case Text:
-        in >> _message;
+        in >> _receiver >> _message;
         break;
     case InitSendingFile:
         in >> _fileName >> _fileSize;
@@ -70,8 +74,19 @@ void ChatProto::loadData(QByteArray data)
     case SendFile:
         in >> _fileName >> _fileSize >> _fileData;
         break;
-    case Name:
+    case SetName:
         in >> _name;
+        break;
+    case ClientName:
+        in >> _previousName >> _clientName;
+        break;
+    case NewClient:
+        break;
+    case ClientDisconnected:
+        in >> _clientName;
+        break;
+    case Connection:
+        in >> _myName >> _clientsName;
         break;
     default:
         break;
@@ -85,6 +100,31 @@ QByteArray ChatProto::getData(MessageType messType, QString data)
     out.setVersion(QDataStream::Qt_6_0);
     out << messType << data;
     return ba;
+}
+
+QString ChatProto::myName() const
+{
+    return _myName;
+}
+
+QStringList ChatProto::clientsName() const
+{
+    return _clientsName;
+}
+
+QString ChatProto::previousName() const
+{
+    return _previousName;
+}
+
+QString ChatProto::clientName() const
+{
+    return _clientName;
+}
+
+QString ChatProto::receiver() const
+{
+    return _receiver;
 }
 
 QByteArray ChatProto::fileData() const

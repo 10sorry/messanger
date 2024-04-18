@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 #include <QString>
+#include <QStringList>
 
 class ChatProto
 {
@@ -16,10 +17,14 @@ public:
         RejectSendingFile,
         SendFile,
         IsTyping,
-        Name
+        SetName,
+        ClientName,
+        Connection,
+        NewClient,
+        ClientDisconnected
     };
     ChatProto();
-    QByteArray textMessage(QString message);
+    QByteArray textMessage(QString message, QString receiver);
     QByteArray isTypingMessage();
     QByteArray setNameMessage(QString name);
     QByteArray setInitSendingFileMessage(QString fileName);
@@ -36,6 +41,16 @@ public:
     QString fileName() const;
     QByteArray fileData() const;
 
+    QString receiver() const;
+
+    QString clientName() const;
+
+    QString previousName() const;
+
+    QStringList clientsName() const;
+
+    QString myName() const;
+
 private: //fields
     QByteArray getData(MessageType messType, QString data);
     MessageType _messType;
@@ -44,6 +59,11 @@ private: //fields
     QString _fileName;
     qint64 _fileSize;
     QByteArray _fileData;
+    QString _receiver;
+    QString _clientName;
+    QString _previousName;
+    QStringList _clientsName;
+    QString _myName;
 };
 
 #endif // CHATPROTO_H

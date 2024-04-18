@@ -12,14 +12,19 @@ ClientChatWidget::ClientChatWidget(QTcpSocket *client, QWidget *parent)
    //connect(_client, &QTcpSocket::readyRead, this, &ClientChatWidget::dataReceived); //пока не нужно, но оставим
     connect(_client, &ClientManager::disconnected, this, &ClientChatWidget::clientDisconnected);
     connect(_client, &ClientManager::textMessageReceived, this, &ClientChatWidget::textMessageReceived);
-    connect(_client, &ClientManager::isTyping, this, &ClientChatWidget::onTyping);;    
-    connect(_client, &ClientManager::nameSet, this, &ClientChatWidget::onClientNameChanged);
+    connect(_client, &ClientManager::isTyping, this, &ClientChatWidget::onTyping);;
+    connect(_client, &ClientManager::nameChanged, this, &ClientChatWidget::onClientNameChanged);
     connect(_client, &ClientManager::initReceivingFile, this, &::ClientChatWidget::onInitReceivingFile);
     connect(_client, &ClientManager::fileSaved, this, &ClientChatWidget::onFileSaved);
     connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
 
     directory.mkdir(_client->name());
     directory.setPath("./" + _client->name());
+}
+
+void ClientChatWidget::disconnect()
+{
+    _client->disconnectFromHost();
 }
 
 ClientChatWidget::~ClientChatWidget()
@@ -40,9 +45,16 @@ void ClientChatWidget::on_buttonSend_clicked()
     ui->listMessages->addItem(message);
 }
 
-void ClientChatWidget::textMessageReceived(QString message)
+void ClientChatWidget::textMessageReceived(QString message, QString receiver)
 {
-    ui->listMessages->addItem(message);
+    if(receiver == "Server" || receiver == "All")
+    {
+        ui->listMessages->addItem(message);
+    }
+    if(receiver != "Server")
+    {
+        emit messForClients(message, receiver, _client->name());
+    }
 }
 
 void ClientChatWidget::onTyping()
@@ -77,9 +89,9 @@ void ClientChatWidget::on_labelOpen_linkActivated(const QString &link)
     QDesktopServices::openUrl(QUrl::fromLocalFile(_client->name()));
 }
 
-void ClientChatWidget::onClientNameChanged(QString name)
+void ClientChatWidget::onClientNameChanged(QString previousName, QString name)
 {
     QFile::rename(directory.canonicalPath(), name);
-    emit clientNameChanged(name);
+    emit clientNameChanged(previousName, name);
 }
 

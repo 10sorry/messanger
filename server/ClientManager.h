@@ -13,6 +13,7 @@ public:
     explicit ClientManager(QHostAddress ip = QHostAddress::LocalHost, ushort port = 4500, QObject *parent = nullptr);
     explicit ClientManager(QTcpSocket *client, QObject *parent = nullptr);
     void connectToServer();
+    void disconnectFromHost();
     void sendMessage(QString message);
     void sendName(QString name);
     QString name() const;
@@ -26,9 +27,9 @@ signals:
     void connected();
     void disconnected();
     //void dataReceived(QByteArray data); //более не требуется
-    void textMessageReceived(QString message);
+    void textMessageReceived(QString message, QString receiver);
     void isTyping();
-    void nameSet(QString name);
+    void nameChanged(QString previousName, QString name);
     //void sendInitSendingFile(QString fileName);
     void rejectReceivingFile();
     void initReceivingFile(QString clietnName, QString fileName, qint64 fileSize);
