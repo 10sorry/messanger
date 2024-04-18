@@ -38,7 +38,7 @@ void MainWindow::on_buttonSend_clicked()
 {
     auto message = ui->lineMessage->text().trimmed();
     _client->sendMessage(message);
-    ui->listMessages->addItem(message);
+    //ui->listMessages->addItem(message);
     ui->lineMessage->setText("");
     ui->lineMessage->setFocus();
 

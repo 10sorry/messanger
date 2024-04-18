@@ -21,6 +21,6 @@ void ChatWidget::setMessage(QString message, bool isMyMessage)
         ui->labelMessage->setAlignment(Qt::AlignRight);
     }
     ui->labelMessage->setText(message);
-    ui->labelMessage->setText(QDateTime::currentDateTime().toString("HH:mm"));
+    ui->labelTime->setText(QDateTime::currentDateTime().toString("HH:mm"));
 }
 
