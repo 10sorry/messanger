@@ -26,7 +26,7 @@ void MainWindow::on_actionConnect_triggered()
                 ui->centralwidget->setEnabled(false);
             });
     connect(_client, &ClientManager::dataReceived, this, &MainWindow::dataReceived);
-
+    connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
     _client->connectToServer();
 }
 
@@ -42,5 +42,12 @@ void MainWindow::on_buttonSend_clicked()
     _client->sendMessage(message);
     ui->listMessages->addItem(message);
     ui->lineMessage->setText("");
+}
+
+
+void MainWindow::on_lineMessage_editingFinished()
+{
+    auto name = ui->lineNickName->text().trimmed();
+    _client->sendName(name);
 }
 
