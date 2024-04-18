@@ -20,9 +20,13 @@ public:
 
 private slots:
     void on_actionConnect_triggered();
-    void dataReceived(QByteArray data);
+    void dataReceived(QString message);
 
     void on_buttonSend_clicked();
+
+    void on_lineMessage_editingFinished();
+    void onTyping();
+
 
 private:
     Ui::MainWindow *ui;

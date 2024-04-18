@@ -10,16 +10,19 @@ CONFIG += c++17
 
 SOURCES += \
     ChatProto.cpp \
+    ChatWidget.cpp \
     ClientManager.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     ChatProto.h \
+    ChatWidget.h \
     ClientManager.h \
     mainwindow.h
 
 FORMS += \
+    ChatWidget.ui \
     mainwindow.ui
 
 # Default rules for deployment.
