@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ChatWidget.h"
 #include "ui_mainwindow.h"
+#include <QFileDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->centralwidget->setEnabled(false);
+    QString iconName = "://C:/Users/foxhalf/Downloads/attachment.png"; // Укажи путь к иконке
+    QIcon icon(iconName);
+    ui->attachButton->setIcon(icon);
 }
 
 MainWindow::~MainWindow()
@@ -29,7 +34,8 @@ void MainWindow::on_actionConnect_triggered()
     connect(_client, &ClientManager::textMessageReceived, this, &MainWindow::dataReceived);
     connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
     //connect(_client, &ClientManager::nameSet, this, &MainWindow::setWindowTitle);
-    connect(_client, &ClientManager::isTyping, this, &MainWindow::onTyping);
+    connect(_client, &ClientManager::rejectReceivingFile, this, &MainWindow::onRejectReceivingFile);
+    connect(_client, &ClientManager::initReceivingFile, this, &MainWindow::onInitReceivingFile);
 
     _client->connectToServer();
 }
@@ -76,5 +82,39 @@ void MainWindow::on_lineNickName_editingFinished()
 {
     auto name = ui->lineNickName->text().trimmed();
     _client->sendName(name);
+}
+
+void MainWindow::onRejectReceivingFile()
+{
+    QMessageBox::critical(this, "Sending File", "Operation rejected...");
+
+}
+
+void MainWindow::onInitReceivingFile(QString clientName, QString fileName, qint64 fileSize)
+{
+    auto message = QString("Client (%1) wants to send a file. Do you wand to accept it?\nFile Name:%2\nFile Size: %3 bytes").arg(clientName, fileName).arg(fileSize);
+    auto result = QMessageBox::critical(this, "Receiving File", message);
+    if(result ==QMessageBox::Yes)
+    {
+        _client->sendAcceptFile();
+    }
+    else
+    {
+        _client->sendRejectFile();
+    }
+
+}
+
+
+
+
+void MainWindow::on_attachButton_clicked()
+{
+    /*QString iconName = "://C:/Users/foxhalf/Downloads/attachment.png";
+    auto icon = QIcon(iconName);
+    ui->attachButton->setIcon(icon);
+    */
+    auto fileName = QFileDialog::getOpenFileName(this, "Select a file", "/home");
+    _client->sendInitSendingFile(fileName);
 }
 

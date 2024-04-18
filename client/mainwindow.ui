@@ -61,6 +61,13 @@
        <widget class="QLineEdit" name="lineMessage"/>
       </item>
       <item>
+       <widget class="QPushButton" name="attachButton">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="buttonSend">
         <property name="text">
          <string>Send</string>

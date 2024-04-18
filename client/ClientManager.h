@@ -13,8 +13,13 @@ public:
     void connectToServer();
     void sendMessage(QString message);
     void sendName(QString name);
-public:
+    void setInitFile(QString fileName);
     void sendIsTyping();
+
+    void sendInitSendingFile(QString fileName);
+    void sendAcceptFile();
+    void sendRejectFile();
+
 signals:
     void connected();
     void disconnected();
@@ -22,14 +27,21 @@ signals:
     void textMessageReceived(QString message);
     void isTyping();
     void nameSet(QString name);
+    void rejectReceivingFile();
+    void initReceivingFile(QString clietnName, QString fileName, qint64 fileSize);
 
 private slots:
     void readyRead();
+
 private: //fields
     QTcpSocket *_socket;
     QHostAddress _ip;
     ushort _port;
     ChatProto _proto;
+    QString _tmpFileName;
+
+private: //methods
+    void sendFile();
 };
 
 #endif // CLIENTMANAGER_H

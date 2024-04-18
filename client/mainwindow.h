@@ -25,6 +25,9 @@ private slots:
     void on_lineMessage_editingFinished();
     void onTyping();
     void on_lineNickName_editingFinished();
+    void onRejectReceivingFile();
+    void onInitReceivingFile(QString clientName, QString fileName, qint64 fileSize);
+    void on_attachButton_clicked();
 
 private:
     Ui::MainWindow *ui;

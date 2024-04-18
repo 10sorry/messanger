@@ -27,6 +27,25 @@ void ClientManager::sendName(QString name)
     _socket->write(_proto.setNameMessage(name));
 }
 
+
+void ClientManager::sendInitSendingFile(QString fileName)
+{
+    _tmpFileName = fileName;
+    _socket->write(_proto.setInitSendingFileMessage(fileName));
+}
+
+//новый метод
+void ClientManager::sendAcceptFile()
+{
+     _socket->write(_proto.setAcceptFileMessage());
+}
+
+//новый метод
+void ClientManager::sendRejectFile()
+{
+     _socket->write(_proto.setRejectFileMessage());
+}
+
 void ClientManager::sendIsTyping()
 {
     _socket->write(_proto.isTypingMessage());
@@ -43,10 +62,22 @@ void ClientManager::readyRead()
         break;
     case ChatProto::IsTyping:
         emit isTyping();
+    case ChatProto::InitSendingFile:
+        emit initReceivingFile(_proto.name(), _proto.fileName(), _proto.fileSize());
+        break;
+    case ChatProto::AcceptSendingFile:
+        sendFile();
+    case ChatProto::RejectSendingFile:
+        emit rejectReceivingFile();
     case ChatProto::Name:
         emit nameSet(_proto.name());
         break;
     default:
         break;
     }
+}
+
+void ClientManager::sendFile()
+{
+    _socket->write(_proto.setFileMessage(_tmpFileName));
 }

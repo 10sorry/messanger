@@ -14,36 +14,44 @@
    <string>Server</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QGroupBox" name="groupChats">
       <property name="title">
        <string>Chats</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QTabWidget" name="tabChats"/>
-       </item>
-      </layout>
+      <widget class="QTabWidget" name="tabChats">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>37</y>
+         <width>751</width>
+         <height>211</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+      </widget>
      </widget>
     </item>
     <item>
      <widget class="QGroupBox" name="groupClients">
       <property name="title">
-       <string>Clients</string>
+       <string>Console</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QListWidget" name="listClients"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonDisconnectALl">
-         <property name="text">
-          <string>Disconnect all</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QListWidget" name="listClients">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>37</y>
+         <width>751</width>
+         <height>211</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

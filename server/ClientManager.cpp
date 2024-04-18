@@ -1,4 +1,5 @@
 #include "ClientManager.h"
+#include <QDir>
 
 ClientManager::ClientManager(QHostAddress ip, ushort port, QObject *parent)
     : QObject{parent},
@@ -47,6 +48,24 @@ void ClientManager::sendIsTyping()
     _socket->write(_proto.isTypingMessage());
 }
 
+//новый метод
+void ClientManager::sendAcceptFile()
+{
+    _socket->write(_proto.setAcceptFileMessage());
+}
+
+//новый метод
+void ClientManager::sendRejectFile()
+{
+    _socket->write(_proto.setRejectFileMessage());
+}
+
+void ClientManager::sendInitSendingFile(QString fileName)
+{
+    _tmpFileName = fileName;
+    _socket->write(_proto.setInitSendingFileMessage(fileName));
+}
+
 void ClientManager::readyRead()
 {
     auto data = _socket->readAll(); //в дальнейшем пробрасываем в протобаф
@@ -58,11 +77,39 @@ void ClientManager::readyRead()
         break;
     case ChatProto::IsTyping:
         emit isTyping();
+    case ChatProto::InitSendingFile:
+        emit initReceivingFile(_proto.name(), _proto.fileName(), _proto.fileSize());
+        break;
+    case ChatProto::AcceptSendingFile:
+        sendFile();
+    case ChatProto::RejectSendingFile:
+        emit rejectReceivingFile();
+    case ChatProto::SendFile:
+        saveFile();
     case ChatProto::Name:
         emit nameSet(_proto.name());
         break;
     default:
         break;
+    }
+}
+
+void ClientManager::sendFile()
+{
+    _socket->write(_proto.setFileMessage(_tmpFileName));
+}
+
+void ClientManager::saveFile()
+{
+    QDir directory;
+    directory.mkdir(name());
+    auto path = QString("%1/%2/%3_%4").arg(directory.canonicalPath(), name(), QDateTime::currentDateTime().toString("ddMMyyy_HHmmss"), _proto.fileName());
+    QFile file(path);
+    if(file.open(QIODevice::WriteOnly))
+    {
+        file.write(_proto.fileData());
+        file.close();
+        emit fileSaved(path);
     }
 }
 
