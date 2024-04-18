@@ -29,37 +29,41 @@ void MainWindow::on_actionConnect_triggered()
     connect(_client, &ClientManager::textMessageReceived, this, &MainWindow::dataReceived);
     //connect(_client, &ClientManager::nameSet, this, &MainWindow::setWindowTitle);
     connect(_client, &ClientManager::isTyping, this, &MainWindow::onTyping);
-
     connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendMessage);
     _client->connectToServer();
 }
 
+
+
 void MainWindow::dataReceived(QString message)
 {
     auto chatWidget = new ChatWidget();
-    chatWidget->setMessage(message, true);
+    chatWidget->setMessage(message);
     auto listItemWidget = new QListWidgetItem();
-    listItemWidget->setSizeHint(QSize(0,5));
+    listItemWidget->setSizeHint(QSize(0,65));
     ui->listMessages->addItem(listItemWidget);
-    listItemWidget->setBackground(QColor(167, 255, 237));
+    listItemWidget->setBackground(QColor(151, 100, 27));
     ui->listMessages->setItemWidget(listItemWidget, chatWidget);
 }
-
 
 void MainWindow::on_buttonSend_clicked()
 {
     auto message = ui->lineMessage->text().trimmed();
     _client->sendMessage(message);
-    ui->listMessages->addItem(message);
-    //ui->lineMessage->setText("");
+    //ui->listMessages->addItem(message);
+    ui->lineMessage->setText("");
     auto chatWidget = new ChatWidget();
     chatWidget->setMessage(message, true);
     auto listItemWidget = new QListWidgetItem();
-    listItemWidget->setSizeHint(QSize(0,5));
+    listItemWidget->setSizeHint(QSize(0,65));
     ui->listMessages->addItem(listItemWidget);
-    //listItemWidget->setBackground(QColor(167, 255, 237));
     ui->listMessages->setItemWidget(listItemWidget, chatWidget);
 }
+
+
+
+
+
 
 void MainWindow::onTyping()
 {
