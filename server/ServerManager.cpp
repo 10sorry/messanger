@@ -6,10 +6,22 @@ ServerManager::ServerManager(ushort port, QObject *parent)
 {
     setupServer(port);
 }
+
+void ServerManager::notifyOtherClients(QString previousName, QString name)
+{
+    auto message = _proto.setClientNameMessage(previousName, name);
+    foreach (auto client, _clients) {
+        auto clientName = client->property("clientName").toString();
+        if (clientName != name) {
+            client->write(message);
+        }
+    }
+}
+
 void ServerManager::newClientConnection()
 {
     auto client = _server->nextPendingConnection();
-    auto id = _clients.count();
+    auto id = _clients.count() + 1;
     auto clientName = QString("Client (%1)").arg(id);
     client->setProperty("id", id);
     client->setProperty("clientName", clientName);
@@ -40,16 +52,6 @@ void ServerManager::onClientDisconnected()
     emit clientDisconnected(client);
 }
 
-void ServerManager::notifyOtherClients(QString previousName, QString name)
-{
-    auto message = _proto.setClientNameMessage(previousName, name);
-    foreach (auto client, _clients) {
-        auto clientName = client->property("clientName").toString();
-        if (clientName != name) {
-            client->write(message);
-        }
-    }
-}
 
 void ServerManager::onMessForClients(QString message, QString receiver, QString sender)
 {

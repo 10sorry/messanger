@@ -43,10 +43,10 @@ public:
     const QString &name() const;
     MessageType messType() const;
     qint64 fileSize() const;
-    QString fileName() const;
-    QByteArray fileData() const;
+    const QString &fileName() const;
+    const QByteArray &fileData() const;
 
-    QString receiver() const;
+    const QString &receiver() const;
 
 private: //fields
     QByteArray getData(MessageType messType, QString data);

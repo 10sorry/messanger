@@ -22,7 +22,6 @@ private slots:
     void on_actionConnect_triggered();
     void dataReceived(QString message);
     void on_buttonSend_clicked();
-    void on_lineMessage_editingFinished();
     void onTyping();
     void on_lineNickName_editingFinished();
     void onRejectReceivingFile();
@@ -30,9 +29,10 @@ private slots:
     void on_attachButton_clicked();
 
     void onConnection(QString myName, QStringList clientsName);
-    void onNewClientConnectedToServer(QString clienName);
-    void onClientNameChanged(QString prevName, QString clientName);
+    void onNewClientConnectedToServer(QString clientName);
+    void onClientNameChanged(QString previousName, QString clientName);
     void onClientDisconnected(QString clientName);
+
 
 private:
     Ui::MainWindow *ui;

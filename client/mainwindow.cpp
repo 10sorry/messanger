@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setupClient();
+
     ui->centralwidget->setEnabled(false);
     QString iconName = "://C:/Users/foxhalf/Downloads/attachment.png";
     QIcon icon(iconName);
@@ -33,10 +34,11 @@ void MainWindow::setupClient()
                 ui->centralwidget->setEnabled(false);
             });
     connect(_client, &ClientManager::textMessageReceived, this, &MainWindow::dataReceived);
-    connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
+    connect(_client, &ClientManager::isTyping, this, &MainWindow::onTyping);
     connect(_client, &ClientManager::rejectReceivingFile, this, &MainWindow::onRejectReceivingFile);
     connect(_client, &ClientManager::initReceivingFile, this, &MainWindow::onInitReceivingFile);
 
+    connect(ui->lineMessage, &QLineEdit::textChanged, _client, &ClientManager::sendIsTyping);
     connect(_client, &ClientManager::connection, this, &MainWindow::onConnection);
     connect(_client, &ClientManager::newClientConnectedToServer, this, &MainWindow::onNewClientConnectedToServer);
     connect(_client, &ClientManager::clientDisconnected, this, &MainWindow::onClientDisconnected);
@@ -45,7 +47,7 @@ void MainWindow::setupClient()
 
 void MainWindow::on_actionConnect_triggered()
 {
-    setupClient();
+    //setupClient();
 
     _client->connectToServer();
 }
@@ -83,11 +85,6 @@ void MainWindow::onTyping()
     statusBar()->showMessage("Server is typing...", 800);
 }
 
-void MainWindow::on_lineMessage_editingFinished()
-{
-
-}
-
 void MainWindow::on_lineNickName_editingFinished()
 {
     auto name = ui->lineNickName->text().trimmed();
@@ -96,23 +93,13 @@ void MainWindow::on_lineNickName_editingFinished()
 
 void MainWindow::onRejectReceivingFile()
 {
-    QMessageBox::critical(this, "Sending File", "Operation rejected...");
+    //QMessageBox::critical(this, "Sending File", "Operation rejected...");
 
 }
 
 void MainWindow::onInitReceivingFile(QString clientName, QString fileName, qint64 fileSize)
 {
-    auto message = QString("Client (%1) wants to send a file. Do you wand to accept it?\nFile Name:%2\nFile Size: %3 bytes").arg(clientName, fileName).arg(fileSize);
-    auto result = QMessageBox::critical(this, "Receiving File", message);
-    if(result ==QMessageBox::Yes)
-    {
-        _client->sendAcceptFile();
-    }
-    else
-    {
-        _client->sendRejectFile();
-    }
-
+    _client->sendAcceptFile();
 }
 
 
@@ -167,4 +154,5 @@ void MainWindow::onClientDisconnected(QString clientName)
         }
     }
 }
+
 

@@ -2,7 +2,7 @@
 #define CLIENTCHATWIDGET_H
 
 #include "ClientManager.h"
-#include "qdir.h"
+#include <QDir>
 #include <QWidget>
 #include <QTcpSocket>
 
@@ -30,6 +30,8 @@ private slots:
     void on_labelOpen_linkActivated(const QString &link);
 
     void onClientNameChanged(QString previousName, QString name);
+
+    void on_lineMessage_editingFinished();
 
 signals:
     void clientNameChanged(QString previousName, QString name);

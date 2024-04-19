@@ -1,4 +1,4 @@
-#include <QDateTime>
+#include <QTime>
 #include "ChatWidget.h"
 #include "ui_ChatWidget.h"
 
@@ -21,6 +21,6 @@ void ChatWidget::setMessage(QString message, bool isMyMessage)
         ui->labelMessage->setAlignment(Qt::AlignRight);
     }
     ui->labelMessage->setText(message);
-    ui->labelTime->setText(QDateTime::currentDateTime().toString("HH:mm"));
+    ui->labelTime->setText(QTime::currentTime().toString("HH:mm"));
 }
 

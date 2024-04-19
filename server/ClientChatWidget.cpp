@@ -9,7 +9,6 @@ ClientChatWidget::ClientChatWidget(QTcpSocket *client, QWidget *parent)
 {
     ui->setupUi(this);
     _client = new ClientManager(client, this);
-   //connect(_client, &QTcpSocket::readyRead, this, &ClientChatWidget::dataReceived); //пока не нужно, но оставим
     connect(_client, &ClientManager::disconnected, this, &ClientChatWidget::clientDisconnected);
     connect(_client, &ClientManager::textMessageReceived, this, &ClientChatWidget::textMessageReceived);
     connect(_client, &ClientManager::isTyping, this, &ClientChatWidget::onTyping);;
@@ -64,16 +63,7 @@ void ClientChatWidget::onTyping()
 
 void ClientChatWidget::onInitReceivingFile(QString clientName, QString fileName, qint64 fileSize)
 {
-    auto message = QString("Client (%1) wants to send a file. Do you wand to accept it?\nFile Name:%2\nFile Size: %3 bytes").arg(clientName, fileName).arg(fileSize);
-    auto result = QMessageBox::critical(this, "Receiving File", message);
-    if(result == QMessageBox::Ok)
-    {
-        _client->sendAcceptFile();
-    }
-    else
-    {
-        _client->sendRejectFile();
-    }
+    _client->sendAcceptFile();
 
 }
 
@@ -94,4 +84,6 @@ void ClientChatWidget::onClientNameChanged(QString previousName, QString name)
     QFile::rename(directory.canonicalPath(), name);
     emit clientNameChanged(previousName, name);
 }
+
+
 

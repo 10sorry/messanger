@@ -28,8 +28,8 @@ QByteArray ChatProto::setInitSendingFileMessage(QString fileName)
 {
     QByteArray ba;
     QDataStream out(&ba, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_6_0);
     QFileInfo info(fileName);
+    out.setVersion(QDataStream::Qt_6_0);
     out << InitSendingFile << info.fileName() << info.size();
     return ba;
 }
@@ -40,9 +40,9 @@ QByteArray ChatProto::setFileMessage(QString fileName)
     QFile file(fileName);
     if(file.open(QIODevice::ReadOnly))
     {
-        QDataStream out(&ba, QIODevice::WriteOnly);
-        out.setVersion(QDataStream::Qt_6_0);
         QFileInfo info(fileName);
+        QDataStream out(&ba, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_6_0); 
         out << SendFile << info.fileName() << info.size() << file.readAll();
         file.close();
     }
@@ -75,21 +75,6 @@ QByteArray ChatProto::setNewClientMessage(QString clientName)
 QByteArray ChatProto::setClientDisconnectedMessage(QString clientName)
 {
     return getData(ClientDisconnected, clientName);
-}
-
-QByteArray ChatProto::fileData() const
-{
-    return _fileData;
-}
-
-QString ChatProto::fileName() const
-{
-    return _fileName;
-}
-
-qint64 ChatProto::fileSize() const
-{
-    return _fileSize;
 }
 
 QByteArray ChatProto::setAcceptFileMessage()
@@ -134,7 +119,22 @@ QByteArray ChatProto::getData(MessageType messType, QString data)
     return ba;
 }
 
-QString ChatProto::receiver() const
+const QByteArray &ChatProto::fileData() const
+{
+    return _fileData;
+}
+
+const QString &ChatProto::fileName() const
+{
+    return _fileName;
+}
+
+qint64 ChatProto::fileSize() const
+{
+    return _fileSize;
+}
+
+const QString &ChatProto::receiver() const
 {
     return _receiver;
 }

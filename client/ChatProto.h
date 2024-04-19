@@ -38,18 +38,18 @@ public:
     const QString &name() const;
     MessageType messType() const;
     qint64 fileSize() const;
-    QString fileName() const;
-    QByteArray fileData() const;
-
+    const QString &fileName() const;
+    const QByteArray &fileData() const;
+    //Status
     QString receiver() const;
 
-    QString clientName() const;
+    const QString &clientName() const;
 
-    QString previousName() const;
+    const QString &previousName() const;
 
-    QStringList clientsName() const;
+    const QStringList &clientsName() const;
 
-    QString myName() const;
+    const QString &myName() const;
 
 private: //fields
     QByteArray getData(MessageType messType, QString data);

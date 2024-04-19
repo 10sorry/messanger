@@ -81,7 +81,6 @@ void ChatProto::loadData(QByteArray data)
         in >> _previousName >> _clientName;
         break;
     case NewClient:
-        break;
     case ClientDisconnected:
         in >> _clientName;
         break;
@@ -102,22 +101,22 @@ QByteArray ChatProto::getData(MessageType messType, QString data)
     return ba;
 }
 
-QString ChatProto::myName() const
+const QString &ChatProto::myName() const
 {
     return _myName;
 }
 
-QStringList ChatProto::clientsName() const
+const QStringList &ChatProto::clientsName() const
 {
     return _clientsName;
 }
 
-QString ChatProto::previousName() const
+const QString &ChatProto::previousName() const
 {
     return _previousName;
 }
 
-QString ChatProto::clientName() const
+const QString &ChatProto::clientName() const
 {
     return _clientName;
 }
@@ -127,12 +126,12 @@ QString ChatProto::receiver() const
     return _receiver;
 }
 
-QByteArray ChatProto::fileData() const
+const QByteArray &ChatProto::fileData() const
 {
     return _fileData;
 }
 
-QString ChatProto::fileName() const
+const QString &ChatProto::fileName() const
 {
     return _fileName;
 }

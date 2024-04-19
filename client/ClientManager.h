@@ -23,15 +23,14 @@ public:
 signals:
     void connected();
     void disconnected();
-    //void dataReceived(QByteArray data); //более не требуется
     void textMessageReceived(QString message);
     void isTyping();
-    void nameSet(QString name);
+    void nameChanged(QString name);
     void rejectReceivingFile();
     void initReceivingFile(QString clietnName, QString fileName, qint64 fileSize);
 
     void connection(QString myName, QStringList clientsName);
-    void newClientConnectedToServer(QString clienName);
+    void newClientConnectedToServer(QString clientName);
     void clientNameChanged(QString previousName, QString clientName);
     void clientDisconnected(QString clientName);
 

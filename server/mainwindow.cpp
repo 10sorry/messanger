@@ -20,11 +20,10 @@ void MainWindow::newClientConnected(QTcpSocket *client)
 {
     auto id = client->property("id").toInt();
     ui->listClients->addItem(QString("New Client added: %1").arg(id));
-    auto chatWidget = new ClientChatWidget(client);
+    auto chatWidget= new ClientChatWidget(client, ui->tabChats);
     ui->tabChats->addTab(chatWidget, QString("Client (%1").arg(id));
     connect(chatWidget, &ClientChatWidget::clientNameChanged, this, &MainWindow::setClientName);
     connect(chatWidget, &ClientChatWidget::isTyping, [this] (QString name) {this->statusBar()->showMessage(name, 800);});
-
     connect(chatWidget, &ClientChatWidget::messForClients, _server, &ServerManager::onMessForClients);
 
 }

@@ -27,12 +27,12 @@ signals:
     void connected();
     void disconnected();
     //void dataReceived(QByteArray data); //более не требуется
-    void textMessageReceived(QString message, QString receiver);
+    void textMessageReceived(const QString message, QString receiver);
     void isTyping();
     void nameChanged(QString previousName, QString name);
     //void sendInitSendingFile(QString fileName);
     void rejectReceivingFile();
-    void initReceivingFile(QString clietnName, QString fileName, qint64 fileSize);
+    void initReceivingFile(QString clientName, QString fileName, qint64 fileSize);
     void fileSaved(QString path);
 
 private slots:
@@ -43,7 +43,6 @@ private: //fields
     QHostAddress _ip;
     ushort _port;
     ChatProto _proto;
-    QString _temporaryFileName;
     QString _tmpFileName;
 
 private: //methods

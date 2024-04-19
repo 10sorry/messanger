@@ -3,6 +3,7 @@
 
 #include "ChatProto.h"
 #include <QObject>
+#include <QTcpSocket>
 #include <QTcpServer>
 
 class ServerManager : public QObject

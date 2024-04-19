@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "ServerManager.h"
+#include "ClientChatWidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

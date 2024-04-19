@@ -56,7 +56,7 @@ void ClientManager::readyRead()
     auto data = _socket->readAll(); //в дальнейшем пробрасываем в протобаф
     //emit dataReceived(data);
     _proto.loadData(data);
-    switch(_proto.messType()) {
+    switch(_proto.messType()){
     case ChatProto::Text:
         emit textMessageReceived(_proto.message());
         break;
@@ -70,7 +70,7 @@ void ClientManager::readyRead()
     case ChatProto::RejectSendingFile:
         emit rejectReceivingFile();
     case ChatProto::SetName:
-        emit nameSet(_proto.name());
+        emit nameChanged(_proto.name());
         break;
     case ChatProto::Connection:
         emit connection(_proto.myName(), _proto.clientsName());
